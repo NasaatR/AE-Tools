@@ -14,7 +14,7 @@ const path = require("node:path");
     p.on("pageerror", (e) => errors.push(String(e)));
     p.on("requestfailed", (r) => errors.push(r.url()));
     await p.goto(pathToFileURL(path.resolve("build/panel/index.html")).href);
-    assert.equal(await p.locator("article").count(), 11);
+    assert.equal(await p.locator("article").count(), 13);
     await p.screenshot({ path: "build/panel-dark.png" });
     await p
       .getByRole("button", { name: "Options for Marker text reveal" })
@@ -91,6 +91,56 @@ const path = require("node:path");
         .getByRole("button", { name: "Reverse reveal" })
         .getAttribute("aria-pressed"),
       "true",
+    );
+    await p.keyboard.press("Escape");
+    await p
+      .getByRole("button", { name: "Options for Text move in", exact: true })
+      .click();
+    assert.equal(
+      await p
+        .getByRole("button", { name: "Lines", exact: true })
+        .getAttribute("aria-pressed"),
+      "true",
+    );
+    await p.getByRole("button", { name: "Words", exact: true }).click();
+    await p
+      .getByRole("spinbutton", { name: "Travel (px) exact value" })
+      .fill("0");
+    await p
+      .getByRole("spinbutton", { name: "Duration (frames) exact value" })
+      .fill("48");
+    await p.screenshot({ path: "build/text-move-options.png" });
+    await p.reload();
+    await p
+      .getByRole("button", { name: "Options for Text move in", exact: true })
+      .click();
+    assert.equal(
+      await p
+        .getByRole("button", { name: "Words", exact: true })
+        .getAttribute("aria-pressed"),
+      "true",
+    );
+    assert.equal(
+      await p
+        .getByRole("spinbutton", { name: "Travel (px) exact value" })
+        .inputValue(),
+      "0",
+    );
+    assert.equal(
+      await p
+        .getByRole("spinbutton", { name: "Duration (frames) exact value" })
+        .inputValue(),
+      "48",
+    );
+    await p.keyboard.press("Escape");
+    await p
+      .getByRole("button", { name: "Options for Text move out", exact: true })
+      .click();
+    assert.equal(
+      await p
+        .getByRole("spinbutton", { name: "Travel (px) exact value" })
+        .inputValue(),
+      "24",
     );
     assert.deepEqual(errors, []);
     console.log("Browser interactions passed at 380px and 210px.");

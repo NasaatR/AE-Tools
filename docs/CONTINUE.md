@@ -1,0 +1,9 @@
+# Continue AE Tools on account B
+
+Start with this complete source tree and the private transfer archive's START_HERE.md. Its original reference assets are optional for building and necessary for direct reference comparison only. Keep them outside the source and public repository. Preserve stable CEP IDs and preference namespace. The 1.1 Windows installer updates the 1.0 preview; do not reuse an issued version for new bytes.
+
+1. Read PROJECT_STATE.md, docs/TEXT_MOTION.md and AGENTS.md. The baseline for 1.1 development was ebb2c1d8a9bad633519dec1e2dc620f4626c74f8. The archive records the precise 1.1 release SHA for handback.
+2. From the source directory use Node 22+, npm ci, npm test and npm run test:ui (Chrome or CHROME_PATH). No GitHub login is needed. Dependencies must be installed or cached once. The build/panel directory is a browser preview and CEP payload. The bundled release installer works offline for the artist.
+3. First pending acceptance is a comparison inside actual After Effects on Windows 11. Check grouping, travel sliders, entry/exit endpoint frames, actual expression errors, update/Undo/save/reopen and mixed text formatting. Confirm before claiming exact visual fidelity. Continue the roadmap or the owner's next request.
+4. For a locally signed development build, use the Windows packaging script with Adobe ZXPSignCmd, NSIS 3 and a local preview P12, after updating product/package metadata. Supply signing material outside source; do not send private keys. A working binary from 1.1 is not a binary for later modified source.
+5. Work in B without GitHub writes. On handback, provide the complete edited source (including deletions/renames in notes), original base SHA, test results, known host gaps and matching installable build when built. A reconciles the result with the then-current main.

@@ -401,7 +401,7 @@ function settings() {
   body.append(
     bar,
     el("h3", "section-label", "About"),
-    el("p", "about", "AE Tools 1.0 · Made by Nasaat"),
+    el("p", "about", "AE Tools 1.1 · Made by Nasaat"),
   );
 }
 function layout(focusId, focusAction) {
@@ -498,7 +498,7 @@ function diagnostics(error) {
   const body = openSheet(error ? "Command details" : "Diagnostics");
   if (error) body.append(el("p", "hint", statusMessage));
   const report =
-    "AE Tools 1.0.0\n" +
+    "AE Tools 1.1.0\n" +
     host +
     "\n" +
     (ToolState.error ? "Settings: " + ToolState.error + "\n" : "") +

@@ -98,6 +98,100 @@
     "help": "Move selected Project items into root folders by media type. Folder selections are refused."
   },
   {
+    "id": "textMoveIn",
+    "title": "Text move in",
+    "category": "Animation",
+    "icon": "arrow-up",
+    "help": "Travel and fade into place. The final unit settles at Move IN END. Edit travel on the applied layer in Effect Controls. Preset 01 uses positive Y, 02 negative Y; each pairs direction with its reference order.",
+    "params": [
+      {
+        "key": "unit",
+        "title": "Animate by",
+        "type": "choice",
+        "choices": ["Lines", "Words"],
+        "default": 0
+      },
+      {
+        "key": "variant",
+        "title": "Motion preset",
+        "type": "choice",
+        "choices": ["01 · From below", "02 · From above"],
+        "default": 0
+      },
+      {
+        "key": "travel",
+        "title": "Travel (px)",
+        "type": "number",
+        "min": 0,
+        "max": 1200,
+        "default": 24
+      },
+      {
+        "key": "frames",
+        "title": "Duration (frames)",
+        "type": "number",
+        "min": 1,
+        "max": 600,
+        "default": 30
+      },
+      {
+        "key": "delay",
+        "title": "Stagger (% of unit duration)",
+        "type": "number",
+        "min": 0,
+        "max": 100,
+        "default": 10
+      }
+    ]
+  },
+  {
+    "id": "textMoveOut",
+    "title": "Text move out",
+    "category": "Animation",
+    "icon": "arrow-down",
+    "help": "Travel and fade away between Move OUT START and Move OUT END. Edit travel on the applied layer in Effect Controls. Preset 01 uses positive Y, 02 negative Y; each pairs direction with its reference order.",
+    "params": [
+      {
+        "key": "unit",
+        "title": "Animate by",
+        "type": "choice",
+        "choices": ["Lines", "Words"],
+        "default": 0
+      },
+      {
+        "key": "variant",
+        "title": "Motion preset",
+        "type": "choice",
+        "choices": ["01 · To bottom", "02 · To top"],
+        "default": 0
+      },
+      {
+        "key": "travel",
+        "title": "Travel (px)",
+        "type": "number",
+        "min": 0,
+        "max": 1200,
+        "default": 24
+      },
+      {
+        "key": "frames",
+        "title": "Duration (frames)",
+        "type": "number",
+        "min": 1,
+        "max": 600,
+        "default": 30
+      },
+      {
+        "key": "delay",
+        "title": "Stagger (% of unit duration)",
+        "type": "number",
+        "min": 0,
+        "max": 100,
+        "default": 10
+      }
+    ]
+  },
+  {
     "id": "textReveal",
     "title": "Marker text reveal",
     "category": "Animation",

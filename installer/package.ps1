@@ -9,7 +9,7 @@ try {
   if (!(Test-Path $Nsis)) { throw 'NSIS 3 is required for the installer build.' }
   if (!$env:AETOOLS_CERT_PASSWORD) { throw 'Supply AETOOLS_CERT_PASSWORD through the signing environment.' }
   $out = Join-Path $root 'build'
-  $zxp = Join-Path $out 'AE-Tools-1.0.zxp'
+  $zxp = Join-Path $out 'AE-Tools-1.1.zxp'
   if (Test-Path $zxp) { throw 'Signed output exists. Use a clean build directory.' }
   & $SignTool -sign "$out/panel" $zxp $Certificate $env:AETOOLS_CERT_PASSWORD
   if ($LASTEXITCODE -ne 0 -or !(Test-Path $zxp)) { throw 'Adobe ZXP signing failed.' }
@@ -24,5 +24,5 @@ try {
   node -e "const b=require('./tools/build'); b.checkES3(require('fs').readFileSync('build/signed/host.jsx','utf8'),'signed/host.jsx')"
   if ($LASTEXITCODE -ne 0) { throw 'Packaged host syntax check failed.' }
   & $Nsis /V2 installer/setup.nsi
-  if ($LASTEXITCODE -ne 0 -or !(Test-Path "$out/AE-Tools-1.0-Setup.exe")) { throw 'NSIS build failed.' }
+  if ($LASTEXITCODE -ne 0 -or !(Test-Path "$out/AE-Tools-1.1-Setup.exe")) { throw 'NSIS build failed.' }
 } finally { Pop-Location }

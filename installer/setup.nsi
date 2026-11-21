@@ -1,8 +1,8 @@
 Unicode True
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
-Name "AE Tools 1.0"
-OutFile "..\build\AE-Tools-1.0-Setup.exe"
+Name "AE Tools 1.1"
+OutFile "..\build\AE-Tools-1.1-Setup.exe"
 RequestExecutionLevel user
 ManifestDPIAware true
 SetCompressor /SOLID lzma

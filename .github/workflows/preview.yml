@@ -1,4 +1,4 @@
-name: Package foundation preview
+name: Package AE Tools preview
 on:
   push:
     branches: [main]
@@ -19,15 +19,15 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:ui
-      - name: Build and verify first preview
+      - name: Sign, upgrade from 1.0 and publish 1.1
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = (Get-Content installer/preview-version).Trim()
-          if ($version -ne '1.0') { throw 'This bootstrap signer is limited to the 1.0 foundation preview.' }
-          gh release view v1.0 --json tagName 2>$null
-          if ($LASTEXITCODE -eq 0) { throw 'Version 1.0 already exists; issued bytes are immutable.' }
+          if ($version -ne '1.1') { throw 'This workflow publishes the 1.1 motion preview only.' }
+          gh release view v1.1 --json tagName 2>$null
+          if ($LASTEXITCODE -eq 0) { throw 'Version 1.1 already exists; issued bytes are immutable.' }
           $tool = "$env:RUNNER_TEMP/ZXPSignCmd.exe"
           Invoke-WebRequest 'https://raw.githubusercontent.com/Adobe-CEP/CEP-Resources/ab5e4e3e53a42fad08e1225a22a991bb1ffe73f6/ZXPSignCMD/4.1.3/x64/ZXPSignCmd.exe' -OutFile $tool
           if ((Get-FileHash $tool).Hash -ne 'FFC2223167225CE61D024EB463FC5AD1A1BE16133F99EF334A646F7311916C98') { throw 'Adobe signer hash mismatch.' }
@@ -35,7 +35,7 @@ jobs:
           Write-Output "::add-mask::$env:AETOOLS_CERT_PASSWORD"
           $cert = "$env:RUNNER_TEMP/foundation.p12"
           try {
-            & $tool -selfSignedCert US Local 'AE Tools' 'AE Tools Foundation Preview 1.0' $env:AETOOLS_CERT_PASSWORD $cert
+            & $tool -selfSignedCert US Local 'AE Tools' 'AE Tools Motion Preview 1.1' $env:AETOOLS_CERT_PASSWORD $cert
             if ($LASTEXITCODE -ne 0) { throw 'Preview certificate creation failed.' }
             $nsis = "${env:ProgramFiles(x86)}/NSIS/makensis.exe"
             if (!(Test-Path $nsis)) { choco install nsis --yes --no-progress }
@@ -43,14 +43,19 @@ jobs:
           } finally { Remove-Item $cert -ErrorAction SilentlyContinue }
           $dir = "$env:APPDATA/Adobe/CEP/extensions/com.nasaat.aetools.panel"
           if (Test-Path $dir) { throw 'Runner unexpectedly contains an existing installation.' }
+          $old = "$env:RUNNER_TEMP/AE-Tools-1.0-Setup.exe"
+          gh release download v1.0 --pattern AE-Tools-1.0-Setup.exe --dir $env:RUNNER_TEMP
+          if ($LASTEXITCODE -ne 0 -or (Get-FileHash $old).Hash -ne '124e185ff649cc5c2f7b981db455fcf76fd94dfdd4c7f07da3d97a3d2e934b15') { throw '1.0 release mismatch.' }
+          $first = Start-Process $old -ArgumentList '/S' -Wait -PassThru
+          if ($first.ExitCode -ne 0 -or !(Test-Path "$dir/aetools-install.id")) { throw 'Could not establish 1.0 upgrade fixture.' }
           foreach ($attempt in 1..2) {
-            $proc = Start-Process 'build/AE-Tools-1.0-Setup.exe' -ArgumentList '/S' -Wait -PassThru
+            $proc = Start-Process 'build/AE-Tools-1.1-Setup.exe' -ArgumentList '/S' -Wait -PassThru
             if ($proc.ExitCode -ne 0) { throw "Installation failed: $($proc.ExitCode)" }
             foreach ($f in Get-ChildItem 'build/signed' -Recurse -File) {
               $relative = [IO.Path]::GetRelativePath((Resolve-Path 'build/signed').Path,$f.FullName)
               if ((Get-FileHash $f.FullName).Hash -ne (Get-FileHash (Join-Path $dir $relative)).Hash) { throw "Installer changed $relative" }
             }
           }
-          @('AE-Tools-1.0-Setup.exe','AE-Tools-1.0.zxp') | ForEach-Object { "$((Get-FileHash "build/$_").Hash.ToLower())  $_" } | Set-Content -Encoding ascii build/SHA256SUMS.txt
-          gh release create v1.0 build/AE-Tools-1.0-Setup.exe build/AE-Tools-1.0.zxp build/SHA256SUMS.txt --target $env:GITHUB_SHA --prerelease --title 'AE Tools 1.0 · Foundation preview' --notes-file installer/NOTES.md
+          @('AE-Tools-1.1-Setup.exe','AE-Tools-1.1.zxp') | ForEach-Object { "$((Get-FileHash "build/$_").Hash.ToLower())  $_" } | Set-Content -Encoding ascii build/SHA256SUMS.txt
+          gh release create v1.1 build/AE-Tools-1.1-Setup.exe build/AE-Tools-1.1.zxp build/SHA256SUMS.txt --target $env:GITHUB_SHA --prerelease --title 'AE Tools 1.1 · Text Motion Preview' --notes-file installer/NOTES.md
           if ($LASTEXITCODE -ne 0) { throw 'Release publication failed.' }

@@ -49,6 +49,8 @@ function build() {
         JSON.stringify(meta) +
         ";\nvar revealExpression = " +
         JSON.stringify(expr) +
+        ";\nvar moveExpression = " +
+        JSON.stringify(read("host/expressions/text-move.js")) +
         ";",
     )
     .replace("/* REGISTER_MODULES */", () => modules);

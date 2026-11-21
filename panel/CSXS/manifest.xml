@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="7.0" ExtensionBundleId="com.nasaat.aetools" ExtensionBundleVersion="1.0.0" ExtensionBundleName="AE Tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ExtensionList><Extension Id="com.nasaat.aetools.panel" Version="1.0.0"/></ExtensionList>
+<ExtensionManifest Version="7.0" ExtensionBundleId="com.nasaat.aetools" ExtensionBundleVersion="1.1.0" ExtensionBundleName="AE Tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ExtensionList><Extension Id="com.nasaat.aetools.panel" Version="1.1.0"/></ExtensionList>
   <ExecutionEnvironment>
     <HostList><Host Name="AEFT" Version="[25.0,27.99]"/></HostList>
     <LocaleList><Locale Code="All"/></LocaleList>
