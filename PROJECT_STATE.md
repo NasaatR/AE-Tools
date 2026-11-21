@@ -10,6 +10,12 @@ Canonical source: NasaatR/AE-Tools, main. Initial base 31800df, research milesto
 
 npm test checks the actual emitted host ES3 with Acorn 8.15.0, script, allowReserved=never and negative controls. Contract tests exercise preflight, late invalid targets, Undo errors, source matching, endpoint timing and reruns. Browser tests cover narrow settings, search, favorites, layout and persisted zero/false. The Windows package workflow verifies the ZXP and matches installed bytes after both fresh install and same-version reinstall. Check the exact commit's Actions jobs for execution status. Browser evidence is separate from AE behavior.
 
+## Verified release
+
+The [1.0 prerelease](https://github.com/NasaatR/AE-Tools/releases/tag/v1.0) was built from [aa1ae76](https://github.com/NasaatR/AE-Tools/commit/aa1ae76c35b3ec54b2af29c17d091839e7b8ff54). [Windows validation](https://github.com/NasaatR/AE-Tools/actions/runs/44944547909) passed 13 automated checks and browser interactions. [Packaging](https://github.com/NasaatR/AE-Tools/actions/runs/44944547905) signed and verified the ZXP, built the EXE and exercised fresh install and reinstall on a Windows runner. The published ZXP payload matched the tested panel file-by-file. Release assets carry SHA256SUMS.txt. Host JSX SHA-256: `9357ed2909f6af94ca4d3589c214ae1decc1168d487fd69858f3c0bc49c2f2a7`.
+
+The first browser pass exposed missing external SVG masks under local-file loading. Glyphs are now embedded from the editable SVGs during build. Keep the offline browser test with failed-resource assertions. The one-time preview certificate is self-signed and specific to this preview. Provide a retained publisher signing identity through a secure signing environment for future production distribution.
+
 ## First Windows / AE acceptance session
 
 Use an unsaved disposable project, then save/reopen your fixture as a new file. Record AE build, language, project expression engine, scaling, and command. Start with a cold installation, docking and resizing at 100/150/200%. Look for clipped settings, stale selection, keyboard focus and restart persistence.
