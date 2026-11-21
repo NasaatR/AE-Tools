@@ -1,0 +1,132 @@
+[
+  {
+    "id": "anchor",
+    "title": "Move anchor",
+    "category": "Layers",
+    "icon": "scan",
+    "help": "Place anchors inside each layer’s source bounds. Static 2D transforms only.",
+    "params": [
+      {
+        "key": "point",
+        "title": "Anchor position",
+        "type": "grid",
+        "choices": [
+          "Top left",
+          "Top",
+          "Top right",
+          "Left",
+          "Center",
+          "Right",
+          "Bottom left",
+          "Bottom",
+          "Bottom right"
+        ],
+        "default": 4
+      }
+    ]
+  },
+  {
+    "id": "parent",
+    "title": "Parent to null",
+    "category": "Layers",
+    "icon": "group",
+    "help": "Parent static, unparented 2D layers to a new controller.",
+    "params": [
+      {
+        "key": "mode",
+        "title": "Controllers",
+        "type": "choice",
+        "choices": ["One for selection", "One per layer"],
+        "default": 0
+      }
+    ]
+  },
+  {
+    "id": "trimKeys",
+    "title": "Trim to keys",
+    "category": "Timeline",
+    "icon": "key-round",
+    "help": "Trim each layer to its selected keyed properties, keeping the last keyed frame."
+  },
+  {
+    "id": "trimBelow",
+    "title": "Trim to layer below",
+    "category": "Timeline",
+    "icon": "scissors",
+    "help": "Trim each selected layer to its overlap with the layer directly underneath."
+  },
+  {
+    "id": "workArea",
+    "title": "Set work area",
+    "category": "Timeline",
+    "icon": "between-horizontal-start",
+    "help": "Set the work area to the combined span of the selected layers."
+  },
+  {
+    "id": "sequence",
+    "title": "Sequence layers",
+    "category": "Timeline",
+    "icon": "list-ordered",
+    "help": "Place layers end to end in timeline order, starting at the top selection’s in point."
+  },
+  {
+    "id": "sourceComp",
+    "title": "Source precomp",
+    "category": "Compositions",
+    "icon": "frame",
+    "help": "Wrap one video layer in a composition matching its interpreted source size, pixel aspect, FPS and duration."
+  },
+  {
+    "id": "trimComp",
+    "title": "Trim comp to work area",
+    "category": "Compositions",
+    "icon": "crop",
+    "help": "Run the native English AE command on the active composition. This changes the comp for all its uses."
+  },
+  {
+    "id": "folders",
+    "title": "Create project folders",
+    "category": "Project",
+    "icon": "folders",
+    "help": "Create or reuse Comps, Footage, Graphics and Audio at the project root."
+  },
+  {
+    "id": "sortItems",
+    "title": "Sort selected items",
+    "category": "Project",
+    "icon": "folder-input",
+    "help": "Move selected Project items into root folders by media type. Folder selections are refused."
+  },
+  {
+    "id": "textReveal",
+    "title": "Marker text reveal",
+    "category": "Animation",
+    "icon": "baseline",
+    "help": "Reveal characters from layer start to IN END. Move the marker to retime. Optional exit uses OUT START and OUT END.",
+    "params": [
+      {
+        "key": "frames",
+        "title": "Intro duration (frames)",
+        "type": "number",
+        "min": 1,
+        "max": 240,
+        "default": 12
+      },
+      {
+        "key": "exit",
+        "title": "Exit animation",
+        "type": "choice",
+        "choices": ["Off", "Reverse reveal"],
+        "default": 0
+      },
+      {
+        "key": "outFrames",
+        "title": "Exit duration (frames)",
+        "type": "number",
+        "min": 1,
+        "max": 240,
+        "default": 12
+      }
+    ]
+  }
+]

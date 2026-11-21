@@ -1,0 +1,14 @@
+{
+  "name": "ae-tools",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tools/build.js && node --test tests/*.test.js",
+    "test:ui": "node tests/browser.js"
+  },
+  "devDependencies": {
+    "acorn": "8.15.0",
+    "playwright-core": "1.56.1"
+  }
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; connect-src 'none'"
+    />
+    <title>AE Tools</title>
+    <link rel="stylesheet" href="ui/panel.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <i class="mark" aria-hidden="true"></i>
+        <h1>AE Tools</h1>
+      </div>
+      <div class="actions">
+        <button
+          id="layout"
+          title="Customize layout"
+          aria-label="Customize layout"
+        ></button
+        ><button id="settings" title="Settings" aria-label="Settings"></button>
+      </div>
+    </header>
+    <main id="workspace">
+      <div class="rail">
+        <label class="search"
+          ><span data-icon="search"></span
+          ><input
+            id="search"
+            type="search"
+            placeholder="Find a tool"
+            aria-label="Find a tool"
+        /></label>
+        <button
+          id="favorites"
+          title="Show favorites"
+          aria-label="Show favorites"
+          aria-pressed="false"
+        ></button>
+      </div>
+      <div id="groups"></div>
+    </main>
+    <footer>
+      <span id="dot" aria-hidden="true"></span
+      ><output id="status" aria-live="polite">Opening panel…</output
+      ><button id="report" title="Diagnostics">Details</button>
+    </footer>
+    <section
+      id="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sheetTitle"
+      hidden
+    >
+      <div class="sheet-head">
+        <h2 id="sheetTitle"></h2>
+        <button id="close" aria-label="Close" title="Close"></button>
+      </div>
+      <div id="sheetBody"></div>
+    </section>
+    <script src="catalog.js"></script>
+    <script src="ui/state.js"></script>
+    <script src="ui/bridge.js"></script>
+    <script src="ui/panel.js"></script>
+  </body>
+</html>
