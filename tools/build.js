@@ -55,10 +55,24 @@ function build() {
   fs.rmSync(dest, { recursive: true, force: true });
   fs.cpSync(path.join(root, "panel"), dest, { recursive: true });
   fs.copyFileSync(path.join(root, "LICENSE"), path.join(dest, "LICENSE.txt"));
-  fs.writeFileSync(path.join(dest, "host.jsx"), jsx);
+  fs.writeFileSync(path.join(dest, "host.jsx"), "\uFEFF" + jsx);
+  // CSS mask images loaded from file:// are subject to Chromium CORS.
+  // Keep original SVGs editable and embed their exact bytes in the offline build.
+  const icons = {};
+  for (const file of fs
+    .readdirSync(path.join(root, "panel/icons"))
+    .filter((x) => x.endsWith(".svg"))) {
+    icons[path.basename(file, ".svg")] =
+      "data:image/svg+xml;base64," +
+      fs.readFileSync(path.join(root, "panel/icons", file)).toString("base64");
+  }
   fs.writeFileSync(
     path.join(dest, "catalog.js"),
-    "window.CATALOG = " + JSON.stringify(catalog) + ";\n",
+    "window.CATALOG = " +
+      JSON.stringify(catalog) +
+      ";\nwindow.GLYPHS = " +
+      JSON.stringify(icons) +
+      ";\n",
   );
   const shipped = fs.readFileSync(path.join(dest, "host.jsx"));
   checkES3(shipped.toString(), "build/panel/host.jsx");

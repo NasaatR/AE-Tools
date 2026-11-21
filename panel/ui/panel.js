@@ -10,11 +10,14 @@ let favoritesOnly = false,
   host = "Browser preview",
   logs = [];
 const categories = [
-  "Layers",
-  "Animation",
-  "Timeline",
-  "Compositions",
-  "Project",
+  ...new Set([
+    "Layers",
+    "Animation",
+    "Timeline",
+    "Compositions",
+    "Project",
+    ...CATALOG.map((tool) => tool.category),
+  ]),
 ];
 function el(tag, cls, txt) {
   const n = document.createElement(tag);
@@ -25,10 +28,7 @@ function el(tag, cls, txt) {
 function icon(name) {
   const n = el("span", "icon");
   n.setAttribute("aria-hidden", "true");
-  n.style.setProperty(
-    "--glyph",
-    'url("' + new URL("icons/" + name + ".svg", document.baseURI).href + '")',
-  );
+  n.style.setProperty("--glyph", 'url("' + window.GLYPHS[name] + '")');
   return n;
 }
 function glyphButton(name, label, fn) {
@@ -202,8 +202,13 @@ async function execute(t) {
   }
 }
 function addLog(id, args, msg) {
+  // Report only a bounded excerpt; file names/line numbers are supplied separately by JSX.
+  const excerpt = String(msg)
+    .replace(/(?:[A-Za-z]:[\\/]|\\\\)[^\r\n"<>|]+/g, "[local path]")
+    .replace(/(?:file:\/\/\/|https?:\/\/)[^\s"'<>]+/gi, "[location]")
+    .slice(0, 700);
   logs.push(
-    [new Date().toISOString(), id, JSON.stringify(args), msg].join("  "),
+    [new Date().toISOString(), id, JSON.stringify(args), excerpt].join("  "),
   );
   logs = logs.slice(-12);
 }
@@ -562,10 +567,7 @@ $("search").oninput = render;
 $("report").onclick = () => diagnostics(false);
 document
   .querySelector("[data-icon=search]")
-  .style.setProperty(
-    "--glyph",
-    'url("' + new URL("icons/search.svg", document.baseURI).href + '")',
-  );
+  .style.setProperty("--glyph", 'url("' + window.GLYPHS.search + '")');
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeSheet();
   if (e.key === "Tab" && !$("sheet").hidden) {

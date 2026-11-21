@@ -33,7 +33,7 @@ function session(layers = []) {
     AVLayer,
     FolderItem,
     FootageItem: class {},
-    MarkerValue: class {},
+    MarkerValue: class { constructor(comment) { this.comment = comment; } },
     PropertyType: { PROPERTY: 1 },
     AutoOrientType: { NO_AUTO_ORIENT: 0 },
   });
@@ -275,5 +275,104 @@ test("folder template is idempotent and ambiguous sibling names block it", () =>
   assert.equal(s.counts.open, 1);
   items.push({ name: "Comps" });
   assert.match(s.run("folders")[1], /ambiguous/);
+  assert.equal(s.counts.open, 1);
+});
+
+test("anchor compensation preserves image under rotation and negative scale", () => {
+  const l = Object.assign(new AVLayer(), layer(1, 0, 3), { autoOrient: 0 });
+  const properties = {};
+  for (const [name, value] of Object.entries({
+    "ADBE Position": [100, 200],
+    "ADBE Anchor Point": [0, 0],
+    "ADBE Scale": [-200, 50],
+    "ADBE Rotate Z": 90,
+  })) {
+    properties[name] = {
+      value,
+      setValue(next) {
+        this.value = Array.from(next);
+      },
+    };
+  }
+  l.property = () => ({ property: (name) => properties[name] });
+  l.sourceRectAtTime = () => ({ left: -5, top: 2, width: 20, height: 8 });
+  const s = session([l]);
+  assert.equal(s.run("anchor", "8")[0], "ok");
+  assert.deepEqual(properties["ADBE Anchor Point"].value, [15, 10]);
+  assert.deepEqual(properties["ADBE Position"].value, [95, 170]);
+});
+
+test("text application writes a new animator and exact markers only, then refuses a repeat", () => {
+  const s = session(),
+    values = [],
+    animators = [];
+  const marker = {
+    get numKeys() {
+      return values.length;
+    },
+    keyTime: (i) => values[i - 1][0],
+    keyValue: (i) => values[i - 1][1],
+    setValueAtTime(t, val) {
+      values.push([t, val]);
+    },
+  };
+  const start = { canSetExpression: true, expressionEnabled: true };
+  const selector = {
+    property: (name) => {
+      assert.equal(name, "ADBE Text Percent Start");
+      return start;
+    },
+  };
+  const selectors = {
+    numProperties: 0,
+    addProperty: (name) => {
+      assert.equal(name, "ADBE Text Selector");
+      return selector;
+    },
+  };
+  const animatorProps = {
+    addProperty: (name) => {
+      assert.equal(name, "ADBE Text Opacity");
+      return { setValue: (v) => assert.equal(v, 0) };
+    },
+  };
+  const anims = {
+    get numProperties() {
+      return animators.length;
+    },
+    canAddProperty: () => true,
+    property: (i) => animators[i - 1],
+    addProperty() {
+      const a = {
+        propertyIndex: 1,
+        property: (name) =>
+          name === "ADBE Text Selectors" ? selectors : animatorProps,
+      };
+      animators.push(a);
+      return a;
+    },
+  };
+  s.comp.selectedLayers = [
+    Object.assign(layer(1, 1, 4), {
+      property(name) {
+        if (name === "ADBE Marker") return marker;
+        assert.equal(name, "ADBE Text Properties");
+        return {
+          property: (name) => {
+            assert.equal(name, "ADBE Text Animators");
+            return anims;
+          },
+        };
+      },
+    }),
+  ];
+  assert.equal(s.run("textReveal", "12,1,8")[0], "ok");
+  assert.deepEqual(
+    values.map((v) => v[0]),
+    [1.48, 3.64, 3.96],
+  );
+  assert.deepEqual(values.map(v => v[1].comment), ["AE Tools · IN END","AE Tools · OUT START","AE Tools · OUT END"]);
+  assert.match(start.expression, /withExit = 1/);
+  assert.match(s.run("textReveal", "12,1,8")[1], /already exists/);
   assert.equal(s.counts.open, 1);
 });

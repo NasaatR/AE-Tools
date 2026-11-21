@@ -2,7 +2,7 @@ name: Package foundation preview
 on:
   push:
     branches: [main]
-    paths: ['installer/preview-version']
+    paths: ['installer/preview-version', '.github/workflows/preview.yml']
   workflow_dispatch:
 permissions:
   contents: read
